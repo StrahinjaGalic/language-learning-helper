@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}
+
+/* WaniKani-inspired color palette */
+:root {
+  --wk-pink: #f100a2;
+  --wk-purple: #a100f1;
+  --wk-radical: #00a1f1;
+  --wk-kanji: #f100a2;
+  --wk-vocab: #a100f1;
+  --wk-apprentice: #dd0093;
+  --wk-guru: #882d9e;
+  --wk-master: #294ddb;
+  --wk-enlightened: #0093dd;
+  --wk-burned: #434343;
+  --wk-bg: #f5f5f5;
+  --wk-card-bg: #ffffff;
+}

@@ -29,12 +29,23 @@ const ReviewChart = ({ snapshots }) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
 
+  // Calculate daily reviews (difference between consecutive days)
+  const dailyReviews = snapshots.map((snapshot, index) => {
+    if (index === 0) {
+      // First day - we don't have previous data, so return 0 or current value
+      return 0;
+    }
+    // Daily reviews = today's total - yesterday's total
+    const reviewsToday = snapshot.reviewCount - snapshots[index - 1].reviewCount;
+    return Math.max(0, reviewsToday); // Ensure non-negative
+  });
+
   const data = {
     labels,
     datasets: [
       {
-        label: 'Review Count',
-        data: snapshots.map(s => s.reviewCount),
+        label: 'Reviews Done',
+        data: dailyReviews,
         borderColor: '#f100a2',
         backgroundColor: 'rgba(241, 0, 162, 0.1)',
         fill: true,
@@ -87,7 +98,7 @@ const ReviewChart = ({ snapshots }) => {
   if (snapshots.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-        No review data available yet. Complete some reviews to see your activity!
+        No historical data yet. Your review history will build up over time as you use the app daily!
       </div>
     );
   }

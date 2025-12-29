@@ -2,13 +2,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 10px;
+  padding: 5px;
 }
 
 .accuracy-circle {
-  width: 180px;
-  height: 180px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -17,8 +17,8 @@
 }
 
 .accuracy-inner {
-  width: 150px;
-  height: 150px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   background: white;
   display: flex;
@@ -29,7 +29,7 @@
 }
 
 .accuracy-value {
-  font-size: 42px;
+  font-size: 28px;
   font-weight: 700;
   color: #333;
   line-height: 1;
@@ -37,26 +37,9 @@
 }
 
 .accuracy-label {
-  font-size: 12px;
+  font-size: 9px;
   color: #888;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-}
-
-.accuracy-details {
-  text-align: center;
-  color: #666;
-}
-
-.accuracy-details p {
-  margin: 8px 0;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.accuracy-tip {
-  font-size: 15px;
-  font-weight: 600;
-  margin-top: 10px !important;
 }

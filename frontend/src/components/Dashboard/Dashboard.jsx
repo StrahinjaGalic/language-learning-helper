@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getProfile, getStats, getSnapshots } from '../../services/api';
+import { getProfile, getStats } from '../../services/api';
 import ProgressCards from './ProgressCards';
-import ReviewChart from './ReviewChart';
 import SRSChart from './SRSChart';
 import AccuracyDisplay from './AccuracyDisplay';
 import './Dashboard.css';
@@ -9,7 +8,6 @@ import './Dashboard.css';
 const Dashboard = ({ userId, onLogout }) => {
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
-  const [snapshots, setSnapshots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -22,15 +20,13 @@ const Dashboard = ({ userId, onLogout }) => {
       setLoading(true);
       setError('');
       
-      const [profileData, statsData, snapshotsData] = await Promise.all([
+      const [profileData, statsData] = await Promise.all([
         getProfile(),
-        getStats(),
-        getSnapshots(30)
+        getStats()
       ]);
 
       setProfile(profileData);
       setStats(statsData);
-      setSnapshots(snapshotsData);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Failed to load dashboard data. Please try again.');
@@ -74,20 +70,63 @@ const Dashboard = ({ userId, onLogout }) => {
       <main className="dashboard-main">
         <ProgressCards stats={stats} profile={profile} />
         
-        <div className="charts-grid">
-          <div className="chart-card">
-            <h2>Review Activity (Last 30 Days)</h2>
-            <ReviewChart snapshots={snapshots} />
+        <div className="status-and-accuracy-section">
+          <div className="stats-card">
+            <h2>Current Status</h2>
+            <div className="stats-grid">
+              <div className="stat-row">
+                <span className="stat-label">Level:</span>
+                <span className="stat-value">{profile?.level || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Total Items:</span>
+                <span className="stat-value">{stats?.totalItems?.toLocaleString() || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Apprentice:</span>
+                <span className="stat-value apprentice-color">{stats?.srs?.apprentice?.toLocaleString() || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Guru:</span>
+                <span className="stat-value guru-color">{stats?.srs?.guru?.toLocaleString() || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Master:</span>
+                <span className="stat-value master-color">{stats?.srs?.master?.toLocaleString() || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Enlightened:</span>
+                <span className="stat-value enlightened-color">{stats?.srs?.enlightened?.toLocaleString() || 0}</span>
+              </div>
+              <div className="stat-row">
+                <span className="stat-label">Burned:</span>
+                <span className="stat-value burned-color">{stats?.srs?.burned?.toLocaleString() || 0}</span>
+              </div>
+            </div>
           </div>
 
+          <div className="accuracy-circles-section">
+          <div className="accuracy-circle-card">
+            <h3>Reading Accuracy</h3>
+            <AccuracyDisplay accuracy={stats?.accuracyBreakdown?.reading?.accuracy} label="Reading" />
+          </div>
+          
+          <div className="accuracy-circle-card">
+            <h3>Meaning Accuracy</h3>
+            <AccuracyDisplay accuracy={stats?.accuracyBreakdown?.meaning?.accuracy} label="Meaning" />
+          </div>
+          
+          <div className="accuracy-circle-card">
+            <h3>Total Accuracy</h3>
+            <AccuracyDisplay accuracy={stats?.accuracyBreakdown?.total?.accuracy} label="Total" />
+          </div>
+          </div>
+        </div>
+
+        <div className="charts-grid">
           <div className="chart-card">
             <h2>SRS Distribution</h2>
             <SRSChart srs={stats?.srs} />
-          </div>
-
-          <div className="chart-card">
-            <h2>Overall Accuracy</h2>
-            <AccuracyDisplay accuracy={stats?.accuracy} />
           </div>
         </div>
 

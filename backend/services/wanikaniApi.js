@@ -62,8 +62,22 @@ export const getSummary = async (token) => {
 
 export const getAssignments = async (token) => {
   try {
-    const response = await rateLimitedRequest(`${WANIKANI_BASE_URL}/assignments`, token);
-    return response.data.data;
+    let allAssignments = [];
+    let nextUrl = `${WANIKANI_BASE_URL}/assignments`;
+    
+    while (nextUrl) {
+      const response = await rateLimitedRequest(nextUrl, token);
+      allAssignments = allAssignments.concat(response.data.data);
+      nextUrl = response.data.pages.next_url;
+      
+      console.log(`Fetched ${allAssignments.length} assignments so far...`);
+      
+      // Safety limit to prevent infinite loops
+      if (allAssignments.length > 10000) break;
+    }
+    
+    console.log(`Total assignments fetched: ${allAssignments.length}`);
+    return allAssignments;
   } catch (error) {
     console.error('Error fetching assignments:', error.message);
     throw new Error('Failed to fetch assignments');
@@ -72,11 +86,54 @@ export const getAssignments = async (token) => {
 
 export const getReviewStatistics = async (token) => {
   try {
-    const response = await rateLimitedRequest(`${WANIKANI_BASE_URL}/review_statistics`, token);
-    return response.data.data;
+    let allStats = [];
+    let nextUrl = `${WANIKANI_BASE_URL}/review_statistics`;
+    
+    while (nextUrl) {
+      const response = await rateLimitedRequest(nextUrl, token);
+      allStats = allStats.concat(response.data.data);
+      nextUrl = response.data.pages.next_url;
+      
+      console.log(`Fetched ${allStats.length} review statistics so far...`);
+      
+      // Safety limit
+      if (allStats.length > 10000) break;
+    }
+    
+    console.log(`Total review statistics fetched: ${allStats.length}`);
+    return allStats;
   } catch (error) {
     console.error('Error fetching review statistics:', error.message);
     throw new Error('Failed to fetch review statistics');
+  }
+};
+
+export const getReviews = async (token, updatedAfter = null) => {
+  try {
+    let allReviews = [];
+    let url = `${WANIKANI_BASE_URL}/reviews`;
+    if (updatedAfter) {
+      url += `?updated_after=${updatedAfter}`;
+    }
+    
+    let nextUrl = url;
+    
+    while (nextUrl) {
+      const response = await rateLimitedRequest(nextUrl, token);
+      allReviews = allReviews.concat(response.data.data);
+      nextUrl = response.data.pages.next_url;
+      
+      console.log(`Fetched ${allReviews.length} reviews so far...`);
+      
+      // For reviews, limit to recent ones (last 1000 reviews should be enough for daily count)
+      if (allReviews.length > 1000) break;
+    }
+    
+    console.log(`Total reviews fetched: ${allReviews.length}`);
+    return allReviews;
+  } catch (error) {
+    console.error('Error fetching reviews:', error.message);
+    throw new Error('Failed to fetch reviews');
   }
 };
 
@@ -91,10 +148,23 @@ export const calculateStats = (assignments, reviewStats) => {
 
   let totalReviews = 0;
   let correctReviews = 0;
+  
+  let meaningTotal = 0;
+  let meaningCorrect = 0;
+  let readingTotal = 0;
+  let readingCorrect = 0;
+
+  console.log(`Processing ${assignments.length} assignments`);
+  console.log(`Processing ${reviewStats.length} review statistics`);
 
   // Calculate SRS distribution from assignments
-  assignments.forEach(assignment => {
-    const stage = assignment.srs_stage;
+  // Only count started assignments (srs_stage > 0)
+  const activeAssignments = assignments.filter(a => a.data && a.data.srs_stage > 0);
+  
+  console.log(`Active assignments: ${activeAssignments.length}`);
+
+  activeAssignments.forEach(assignment => {
+    const stage = assignment.data.srs_stage;
     if (stage >= 1 && stage <= 4) srs.apprentice++;
     else if (stage >= 5 && stage <= 6) srs.guru++;
     else if (stage === 7) srs.master++;
@@ -102,23 +172,84 @@ export const calculateStats = (assignments, reviewStats) => {
     else if (stage === 9) srs.burned++;
   });
 
+  console.log('SRS Distribution:', srs);
+
   // Calculate accuracy from review statistics
   reviewStats.forEach(stat => {
-    const meaningCorrect = stat.meaning_correct || 0;
-    const meaningIncorrect = stat.meaning_incorrect || 0;
-    const readingCorrect = stat.reading_correct || 0;
-    const readingIncorrect = stat.reading_incorrect || 0;
+    const data = stat.data || stat;
+    const mCorrect = data.meaning_correct || 0;
+    const mIncorrect = data.meaning_incorrect || 0;
+    const rCorrect = data.reading_correct || 0;
+    const rIncorrect = data.reading_incorrect || 0;
 
-    correctReviews += meaningCorrect + readingCorrect;
-    totalReviews += meaningCorrect + meaningIncorrect + readingCorrect + readingIncorrect;
+    meaningCorrect += mCorrect;
+    meaningTotal += mCorrect + mIncorrect;
+    
+    readingCorrect += rCorrect;
+    readingTotal += rCorrect + rIncorrect;
+    
+    correctReviews += mCorrect + rCorrect;
+    totalReviews += mCorrect + mIncorrect + rCorrect + rIncorrect;
   });
 
-  const accuracy = totalReviews > 0 ? Math.round((correctReviews / totalReviews) * 100) : 0;
+  const totalAccuracy = totalReviews > 0 ? Math.round((correctReviews / totalReviews) * 100) : 0;
+  const meaningAccuracy = meaningTotal > 0 ? Math.round((meaningCorrect / meaningTotal) * 100) : 0;
+  const readingAccuracy = readingTotal > 0 ? Math.round((readingCorrect / readingTotal) * 100) : 0;
+
+  console.log(`Total reviews: ${totalReviews}, Accuracy: ${totalAccuracy}%`);
+  console.log(`Meaning: ${meaningAccuracy}%, Reading: ${readingAccuracy}%`);
 
   return {
     srs,
-    accuracy,
-    totalItems: assignments.length,
+    accuracy: totalAccuracy,
+    accuracyBreakdown: {
+      reading: {
+        accuracy: readingAccuracy,
+        total: readingTotal,
+        correct: readingCorrect
+      },
+      meaning: {
+        accuracy: meaningAccuracy,
+        total: meaningTotal,
+        correct: meaningCorrect
+      },
+      total: {
+        accuracy: totalAccuracy,
+        total: totalReviews,
+        correct: correctReviews
+      }
+    },
+    totalItems: activeAssignments.length,
     reviewCount: totalReviews
   };
+};
+
+export const calculateDailyReviewCount = (reviews) => {
+  // Count reviews done today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  console.log(`Total reviews to process: ${reviews.length}`);
+  
+  // Check structure of first review
+  if (reviews.length > 0) {
+    console.log('Sample review structure:', JSON.stringify(reviews[0], null, 2));
+  }
+  
+  const todayReviews = reviews.filter(review => {
+    const data = review.data || review;
+    const createdAt = data.created_at || data.data_updated_at;
+    
+    if (!createdAt) {
+      console.log('Warning: Review without date', review);
+      return false;
+    }
+    
+    const reviewDate = new Date(createdAt);
+    reviewDate.setHours(0, 0, 0, 0);
+    return reviewDate.getTime() === today.getTime();
+  });
+  
+  console.log(`Reviews done today: ${todayReviews.length}`);
+  return todayReviews.length;
 };

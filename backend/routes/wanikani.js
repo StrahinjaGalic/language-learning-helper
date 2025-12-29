@@ -55,7 +55,7 @@ router.get('/stats', async (req, res) => {
       {
         userId: req.user._id,
         date: today,
-        reviewCount: stats.reviewCount,
+        reviewCount: stats.reviewCount, // Total reviews ever
         srs: stats.srs,
         accuracy: stats.accuracy,
         totalItems: stats.totalItems
@@ -73,7 +73,7 @@ router.get('/stats', async (req, res) => {
 // GET /api/snapshots
 router.get('/snapshots', async (req, res) => {
   try {
-    const { days = 30 } = req.query;
+    const { days = 10 } = req.query;
     
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - parseInt(days));

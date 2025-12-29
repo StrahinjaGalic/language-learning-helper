@@ -1,7 +1,7 @@
 import React from 'react';
 import './AccuracyDisplay.css';
 
-const AccuracyDisplay = ({ accuracy }) => {
+const AccuracyDisplay = ({ accuracy, label }) => {
   const getAccuracyColor = (acc) => {
     if (acc >= 90) return '#43e97b';
     if (acc >= 75) return '#f093fb';
@@ -17,7 +17,7 @@ const AccuracyDisplay = ({ accuracy }) => {
   };
 
   const color = getAccuracyColor(accuracy);
-  const label = getAccuracyLabel(accuracy);
+  const statusLabel = getAccuracyLabel(accuracy);
 
   return (
     <div className="accuracy-display">
@@ -29,17 +29,8 @@ const AccuracyDisplay = ({ accuracy }) => {
       >
         <div className="accuracy-inner">
           <div className="accuracy-value">{accuracy}%</div>
-          <div className="accuracy-label">{label}</div>
+          <div className="accuracy-label">{statusLabel}</div>
         </div>
-      </div>
-      
-      <div className="accuracy-details">
-        <p>Your overall review accuracy across all items.</p>
-        <p className="accuracy-tip">
-          {accuracy >= 75 
-            ? '🎉 Keep up the great work!' 
-            : '💪 Practice makes perfect!'}
-        </p>
       </div>
     </div>
   );

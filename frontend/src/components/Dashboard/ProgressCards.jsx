@@ -2,6 +2,18 @@ import React from 'react';
 import './ProgressCards.css';
 
 const ProgressCards = ({ stats, profile }) => {
+  // Calculate days since started
+  const calculateDaysSince = (startDate) => {
+    if (!startDate) return 0;
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffTime = Math.abs(now - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const daysSinceStart = calculateDaysSince(profile?.started_at);
+
   const cards = [
     {
       title: 'Current Level',
@@ -10,10 +22,10 @@ const ProgressCards = ({ stats, profile }) => {
       icon: '📊'
     },
     {
-      title: 'Total Items',
-      value: stats?.totalItems || 0,
+      title: 'Days Active',
+      value: daysSinceStart,
       color: '#f093fb',
-      icon: '📚'
+      icon: '📅'
     },
     {
       title: 'Burned Items',
@@ -22,7 +34,7 @@ const ProgressCards = ({ stats, profile }) => {
       icon: '🔥'
     },
     {
-      title: 'Total Reviews',
+      title: 'Lifetime Reviews',
       value: stats?.reviewCount || 0,
       color: '#43e97b',
       icon: '✅'

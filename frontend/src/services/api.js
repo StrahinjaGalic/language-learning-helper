@@ -45,4 +45,19 @@ export const getSnapshots = async (days = 30) => {
   return response.data;
 };
 
+export const getReviewForecast = async () => {
+  const response = await api.get('/wk/review-forecast');
+  return response.data;
+};
+
+export const getStreaks = async () => {
+  const response = await api.get('/wk/streaks');
+  return response.data;
+};
+
+export const getItems = async () => {
+  const response = await api.get('/wk/items');
+  return response.data;
+};
+
 export default api;

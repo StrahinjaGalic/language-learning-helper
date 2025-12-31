@@ -137,6 +137,48 @@ export const getReviews = async (token, updatedAfter = null) => {
   }
 };
 
+export const getSubjects = async (token, subjectIds = null) => {
+  try {
+    let allSubjects = [];
+    let url = `${WANIKANI_BASE_URL}/subjects`;
+    
+    if (subjectIds && subjectIds.length > 0) {
+      // Fetch specific subjects by ID (max 1000 per request)
+      const chunks = [];
+      for (let i = 0; i < subjectIds.length; i += 1000) {
+        chunks.push(subjectIds.slice(i, i + 1000));
+      }
+      
+      for (const chunk of chunks) {
+        const idsParam = chunk.join(',');
+        const response = await rateLimitedRequest(`${url}?ids=${idsParam}`, token);
+        allSubjects = allSubjects.concat(response.data.data);
+        console.log(`Fetched ${allSubjects.length} subjects so far...`);
+      }
+    } else {
+      // Fetch all subjects (paginated)
+      let nextUrl = url;
+      
+      while (nextUrl) {
+        const response = await rateLimitedRequest(nextUrl, token);
+        allSubjects = allSubjects.concat(response.data.data);
+        nextUrl = response.data.pages.next_url;
+        
+        console.log(`Fetched ${allSubjects.length} subjects so far...`);
+        
+        // Safety limit
+        if (allSubjects.length > 10000) break;
+      }
+    }
+    
+    console.log(`Total subjects fetched: ${allSubjects.length}`);
+    return allSubjects;
+  } catch (error) {
+    console.error('Error fetching subjects:', error.message);
+    throw new Error('Failed to fetch subjects');
+  }
+};
+
 export const calculateStats = (assignments, reviewStats) => {
   const srs = {
     apprentice: 0,

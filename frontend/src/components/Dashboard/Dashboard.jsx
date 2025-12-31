@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { getProfile, getStats } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
+import { getProfile, getStats, getReviewForecast, getStreaks } from '../../services/api';
 import ProgressCards from './ProgressCards';
 import SRSChart from './SRSChart';
 import AccuracyDisplay from './AccuracyDisplay';
+import ReviewForecast from './ReviewForecast';
+import StudyStreaks from './StudyStreaks';
 import './Dashboard.css';
 
 const Dashboard = ({ userId, onLogout }) => {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
+  const [forecast, setForecast] = useState(null);
+  const [streaks, setStreaks] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -20,13 +26,17 @@ const Dashboard = ({ userId, onLogout }) => {
       setLoading(true);
       setError('');
       
-      const [profileData, statsData] = await Promise.all([
+      const [profileData, statsData, forecastData, streaksData] = await Promise.all([
         getProfile(),
-        getStats()
+        getStats(),
+        getReviewForecast(),
+        getStreaks()
       ]);
 
       setProfile(profileData);
       setStats(statsData);
+      setForecast(forecastData);
+      setStreaks(streaksData);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Failed to load dashboard data. Please try again.');
@@ -62,6 +72,7 @@ const Dashboard = ({ userId, onLogout }) => {
           <div className="user-info">
             <span className="username">{profile?.username}</span>
             <span className="level">Level {profile?.level}</span>
+            <button onClick={() => navigate('/items')} className="browse-button">Browse Items</button>
             <button onClick={onLogout} className="logout-button">Logout</button>
           </div>
         </div>
@@ -128,6 +139,16 @@ const Dashboard = ({ userId, onLogout }) => {
             <h2>SRS Distribution</h2>
             <SRSChart srs={stats?.srs} />
           </div>
+          
+          <div className="chart-card">
+            <h2>Review Forecast</h2>
+            <ReviewForecast forecast={forecast} />
+          </div>
+        </div>
+
+        <div className="chart-card full-width">
+          <h2>Study Streaks</h2>
+          <StudyStreaks streakData={streaks} />
         </div>
 
         <button onClick={fetchData} className="refresh-button">

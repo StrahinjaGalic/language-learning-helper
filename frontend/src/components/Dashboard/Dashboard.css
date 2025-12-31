@@ -46,6 +46,25 @@
   letter-spacing: 0.5px;
 }
 
+.browse-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.browse-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
 .logout-button {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.4);
@@ -56,6 +75,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
@@ -278,6 +298,10 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   border-top: 3px solid #f100a2;
+}
+
+.chart-card.full-width {
+  grid-column: 1 / -1;
 }
 
 .chart-card h2 {

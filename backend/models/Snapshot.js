@@ -16,6 +16,10 @@ const snapshotSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  dailyReviewsCompleted: {
+    type: Number,
+    default: 0
+  },
   srs: {
     apprentice: { type: Number, default: 0 },
     guru: { type: Number, default: 0 },

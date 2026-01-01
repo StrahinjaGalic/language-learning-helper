@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import ItemBrowserPage from './components/Dashboard/ItemBrowserPage';
+import StudyListsPage from './components/Dashboard/StudyListsPage';
 import './App.css';
 
 function App() {
@@ -51,6 +52,12 @@ function App() {
           path="/items" 
           element={
             userId ? <ItemBrowserPage onLogout={handleLogout} /> : <Navigate to="/login" />
+          } 
+        />
+        <Route 
+          path="/study-lists" 
+          element={
+            userId ? <StudyListsPage onLogout={handleLogout} /> : <Navigate to="/login" />
           } 
         />
         <Route path="/" element={<Navigate to="/dashboard" />} />

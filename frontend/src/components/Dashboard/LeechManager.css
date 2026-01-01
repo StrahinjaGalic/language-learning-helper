@@ -1,0 +1,282 @@
+.leech-manager {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leech-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 18px;
+}
+
+.leech-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.leech-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin: 0 0 8px 0;
+}
+
+.leech-description {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.leech-count-badge {
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.leech-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.filter-group select {
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #f100a2;
+}
+
+.no-leeches {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-leeches-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.no-leeches h3 {
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.no-leeches p {
+  color: #666;
+}
+
+.leeches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leech-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 24px;
+  transition: all 0.3s;
+  align-items: center;
+}
+
+.leech-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leech-card.type-radical {
+  border-left: 4px solid #00a0f1;
+}
+
+.leech-card.type-kanji {
+  border-left: 4px solid #f100a2;
+}
+
+.leech-card.type-vocabulary {
+  border-left: 4px solid #a100f1;
+}
+
+.leech-main {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex: 1;
+}
+
+.leech-character {
+  font-size: 56px;
+  font-weight: 400;
+  color: #333;
+  min-width: 80px;
+  text-align: center;
+}
+
+.leech-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leech-meanings {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.leech-readings {
+  font-size: 15px;
+  color: #666;
+  font-style: italic;
+}
+
+.leech-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.leech-level {
+  color: #666;
+  font-weight: 600;
+}
+
+.leech-srs {
+  color: #999;
+}
+
+.leech-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  min-width: 180px;
+}
+
+.accuracy-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 15px;
+  color: white;
+}
+
+.accuracy-badge.accuracy-medium {
+  background: #fbbc04;
+}
+
+.accuracy-badge.accuracy-low {
+  background: #ff6b35;
+}
+
+.accuracy-badge.accuracy-critical {
+  background: #ea4335;
+}
+
+.leech-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.detail-row span:first-child {
+  color: #666;
+}
+
+.detail-row span:last-child {
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-row .accuracy-medium {
+  color: #fbbc04;
+}
+
+.detail-row .accuracy-low {
+  color: #ff6b35;
+}
+
+.detail-row .accuracy-critical {
+  color: #ea4335;
+}
+
+.incorrect-count {
+  color: #ea4335 !important;
+}
+
+.leech-tips {
+  margin-top: 32px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff5fb 0%, #f5f0ff 100%);
+  border-radius: 8px;
+}
+
+.leech-tips h4 {
+  color: #333;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+}
+
+.leech-tips ul {
+  margin: 0;
+  padding-left: 24px;
+  color: #666;
+  line-height: 1.8;
+}
+
+.leech-tips li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .leech-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .leech-stats {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .leech-character {
+    font-size: 48px;
+  }
+}

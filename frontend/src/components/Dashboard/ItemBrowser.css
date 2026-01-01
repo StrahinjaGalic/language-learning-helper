@@ -27,6 +27,33 @@
   margin: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.quick-filter-btn {
+  padding: 10px 20px;
+  border: 2px solid #f100a2;
+  background: white;
+  color: #f100a2;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.quick-filter-btn:hover {
+  background: linear-gradient(135deg, #fff5fb 0%, #f5f0ff 100%);
+}
+
+.quick-filter-btn.active {
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+}
+
 .item-count {
   color: #f100a2;
   font-weight: 600;

@@ -1,0 +1,59 @@
+.level-up-predictor-simple {
+  padding: 20px;
+}
+
+.level-up-predictor-simple h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.estimate-content {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.days-number {
+  font-size: 64px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.days-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.kanji-remaining {
+  font-size: 14px;
+  color: #999;
+}
+
+.level-up-ready {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.ready-icon {
+  font-size: 64px;
+  margin-bottom: 10px;
+}
+
+.ready-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+.level-progress-loading {
+  text-align: center;
+  padding: 30px;
+  color: #999;
+}

@@ -60,4 +60,39 @@ export const getItems = async () => {
   return response.data;
 };
 
+export const getLeeches = async (threshold = 75, minReviews = 5) => {
+  const response = await api.get(`/wk/leeches?threshold=${threshold}&minReviews=${minReviews}`);
+  return response.data;
+};
+
+export const getLevelProgress = async () => {
+  const response = await api.get('/wk/level-progress');
+  return response.data;
+};
+
+export const getStudyLists = async () => {
+  const response = await api.get('/wk/study-lists');
+  return response.data;
+};
+
+export const createStudyList = async (name, description, itemIds, category) => {
+  const response = await api.post('/wk/study-lists', { name, description, itemIds, category });
+  return response.data;
+};
+
+export const updateStudyList = async (id, name, description, itemIds, category) => {
+  const response = await api.put(`/wk/study-lists/${id}`, { name, description, itemIds, category });
+  return response.data;
+};
+
+export const deleteStudyList = async (id) => {
+  const response = await api.delete(`/wk/study-lists/${id}`);
+  return response.data;
+};
+
+export const getStudyListItems = async (id) => {
+  const response = await api.get(`/wk/study-lists/${id}/items`);
+  return response.data;
+};
+
 export default api;

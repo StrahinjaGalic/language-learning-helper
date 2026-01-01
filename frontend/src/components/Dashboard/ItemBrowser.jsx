@@ -11,7 +11,8 @@ const ItemBrowser = () => {
     type: 'all',
     level: 'all',
     srsStage: 'all',
-    minAccuracy: 0
+    minAccuracy: 0,
+    leechesOnly: false
   });
 
   useEffect(() => {
@@ -83,6 +84,16 @@ const ItemBrowser = () => {
       });
     }
 
+    // Leeches filter
+    if (filters.leechesOnly) {
+      filtered = filtered.filter(item => {
+        const avgAccuracy = item.readingAccuracy !== null
+          ? (item.meaningAccuracy + item.readingAccuracy) / 2
+          : item.meaningAccuracy;
+        return avgAccuracy < 75 && (item.meaningIncorrect + (item.readingIncorrect || 0)) >= 3;
+      });
+    }
+
     setFilteredItems(filtered);
   };
 
@@ -110,7 +121,15 @@ const ItemBrowser = () => {
     <div className="item-browser">
       <div className="browser-header">
         <h2>Browse Your Items</h2>
-        <p className="item-count">{filteredItems.length} of {items.length} items</p>
+        <div className="header-actions">
+          <button 
+            className={`quick-filter-btn ${filters.leechesOnly ? 'active' : ''}`}
+            onClick={() => setFilters({...filters, leechesOnly: !filters.leechesOnly})}
+          >
+            🩹 {filters.leechesOnly ? 'Show All' : 'Show Leeches Only'}
+          </button>
+          <p className="item-count">{filteredItems.length} of {items.length} items</p>
+        </div>
       </div>
 
       <div className="browser-controls">

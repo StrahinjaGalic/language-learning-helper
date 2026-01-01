@@ -1,0 +1,367 @@
+.study-lists-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  height: calc(100vh - 180px);
+}
+
+.lists-sidebar {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sidebar-header h2 {
+  font-size: 20px;
+  margin: 0;
+  color: #333;
+}
+
+.create-button {
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.create-button:hover {
+  transform: translateY(-2px);
+}
+
+.quick-create-button {
+  width: 100%;
+  background: linear-gradient(135deg, #fff5fb 0%, #f5f0ff 100%);
+  border: 2px solid #f100a2;
+  color: #f100a2;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.quick-create-button:hover {
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+}
+
+.lists-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.no-lists {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-lists small {
+  display: block;
+  margin-top: 8px;
+  color: #ccc;
+}
+
+.lists-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item {
+  position: relative;
+  padding: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.list-item:hover {
+  border-color: #f100a2;
+  background: #fff5fb;
+}
+
+.list-item.active {
+  border-color: #f100a2;
+  background: linear-gradient(135deg, #fff5fb 0%, #f5f0ff 100%);
+}
+
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.list-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+.list-count {
+  background: #f100a2;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.list-description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.delete-list-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.list-item:hover .delete-list-btn {
+  opacity: 1;
+}
+
+.list-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.content-header h2 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.content-description {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.content-badge {
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 80px 20px;
+  color: #999;
+}
+
+.empty-list small {
+  display: block;
+  margin-top: 8px;
+  color: #ccc;
+}
+
+.no-selection {
+  text-align: center;
+  padding: 120px 20px;
+  color: #999;
+  font-size: 18px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.study-item-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.study-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #f100a2;
+}
+
+.item-character {
+  font-size: 48px;
+  text-align: center;
+  color: #333;
+}
+
+.item-meanings {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+}
+
+.item-readings {
+  font-size: 13px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #999;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin: 0 0 24px 0;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #f100a2;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  padding: 10px 24px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  border-color: #ccc;
+  background: #f9f9f9;
+}
+
+.submit-button {
+  padding: 10px 24px;
+  border: none;
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .study-lists-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .lists-sidebar {
+    max-height: 400px;
+  }
+
+  .items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

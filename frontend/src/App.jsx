@@ -4,6 +4,7 @@ import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import ItemBrowserPage from './components/Dashboard/ItemBrowserPage';
 import StudyListsPage from './components/Dashboard/StudyListsPage';
+import JLPTProgressPage from './components/Dashboard/JLPTProgressPage';
 import './App.css';
 
 function App() {
@@ -58,6 +59,12 @@ function App() {
           path="/study-lists" 
           element={
             userId ? <StudyListsPage onLogout={handleLogout} /> : <Navigate to="/login" />
+          } 
+        />
+        <Route 
+          path="/jlpt" 
+          element={
+            userId ? <JLPTProgressPage onLogout={handleLogout} /> : <Navigate to="/login" />
           } 
         />
         <Route path="/" element={<Navigate to="/dashboard" />} />

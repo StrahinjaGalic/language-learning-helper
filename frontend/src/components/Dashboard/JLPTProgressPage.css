@@ -1,0 +1,185 @@
+.jlpt-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.jlpt-level-section {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.jlpt-level-header {
+  padding: 20px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.jlpt-level-header:hover {
+  background: #f9f9f9;
+}
+
+.jlpt-level-section.n5 .jlpt-level-header {
+  border-left: 6px solid #4caf50;
+}
+
+.jlpt-level-section.n4 .jlpt-level-header {
+  border-left: 6px solid #8bc34a;
+}
+
+.jlpt-level-section.n3 .jlpt-level-header {
+  border-left: 6px solid #ff9800;
+}
+
+.jlpt-level-section.n2 .jlpt-level-header {
+  border-left: 6px solid #ff5722;
+}
+
+.jlpt-level-section.n1 .jlpt-level-header {
+  border-left: 6px solid #f44336;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.level-info h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.level-count {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+.level-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-bar-wrapper {
+  width: 200px;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
+  transition: width 0.5s ease;
+}
+
+.percentage {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f100a2;
+  min-width: 50px;
+}
+
+.expand-icon {
+  font-size: 14px;
+  color: #999;
+  margin-left: 8px;
+}
+
+.kanji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 4px;
+  padding: 16px 24px 24px;
+  background: #fafafa;
+}
+
+.kanji-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: default;
+  transition: transform 0.2s;
+  border: 2px solid transparent;
+}
+
+.kanji-cell:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.kanji-cell.locked {
+  background: #e0e0e0;
+  color: #999;
+}
+
+.kanji-cell.apprentice {
+  background: #f8bbd0;
+  color: #c2185b;
+  border-color: #e91e63;
+}
+
+.kanji-cell.guru {
+  background: #e1bee7;
+  color: #7b1fa2;
+  border-color: #9c27b0;
+}
+
+.kanji-cell.master {
+  background: #bbdefb;
+  color: #1565c0;
+  border-color: #2196f3;
+}
+
+.kanji-cell.enlightened {
+  background: #c5e1a5;
+  color: #558b2f;
+  border-color: #8bc34a;
+}
+
+.kanji-cell.burned {
+  background: #666;
+  color: #fff;
+  border-color: #444;
+}
+
+@media (max-width: 768px) {
+  .jlpt-level-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .level-progress {
+    width: 100%;
+  }
+
+  .progress-bar-wrapper {
+    flex: 1;
+  }
+
+  .kanji-grid {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 3px;
+  }
+
+  .kanji-cell {
+    font-size: 20px;
+  }
+}

@@ -73,6 +73,7 @@ const Dashboard = ({ userId, onLogout }) => {
             <span className="username">{profile?.username}</span>
             <span className="level">Level {profile?.level}</span>
             <button onClick={() => navigate('/items')} className="browse-button">Browse Items</button>
+            <button onClick={() => navigate('/jlpt')} className="browse-button">JLPT Progress</button>
             <button onClick={() => navigate('/study-lists')} className="browse-button">Study Lists</button>
             <button onClick={onLogout} className="logout-button">Logout</button>
           </div>

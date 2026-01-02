@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getStudyLists, createStudyList, deleteStudyList, getStudyListItems, getLeeches } from '../../services/api';
 import './StudyListsPage.css';
+import './PageContainer.css';
 
-const StudyListsPage = ({ onLogout }) => {
+const StudyListsPage = () => {
   const navigate = useNavigate();
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,21 +75,8 @@ const StudyListsPage = ({ onLogout }) => {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>Custom Study Lists</h1>
-          <div className="header-actions">
-            <button onClick={() => navigate('/dashboard')} className="nav-button">
-              Back to Dashboard
-            </button>
-            <button onClick={onLogout} className="logout-button">Logout</button>
-          </div>
-        </div>
-      </header>
-
-      <main className="dashboard-main">
-        <div className="study-lists-container">
+    <div className="page-container">
+      <div className="study-lists-container">
           <div className="lists-sidebar">
             <div className="sidebar-header">
               <h2>My Lists</h2>
@@ -178,14 +166,13 @@ const StudyListsPage = ({ onLogout }) => {
             )}
           </div>
         </div>
-      </main>
 
-      {showCreateModal && (
-        <CreateListModal
-          onClose={() => setShowCreateModal(false)}
-          onCreate={handleCreateList}
-        />
-      )}
+        {showCreateModal && (
+          <CreateListModal
+            onClose={() => setShowCreateModal(false)}
+            onCreate={handleCreateList}
+          />
+        )}
     </div>
   );
 };

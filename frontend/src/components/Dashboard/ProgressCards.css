@@ -1,7 +1,7 @@
 .progress-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
   margin-bottom: 30px;
 }
 

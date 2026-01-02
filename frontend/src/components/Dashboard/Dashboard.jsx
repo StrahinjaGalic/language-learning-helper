@@ -8,7 +8,7 @@ import ReviewForecast from './ReviewForecast';
 import StudyStreaks from './StudyStreaks';
 import './Dashboard.css';
 
-const Dashboard = ({ userId, onLogout }) => {
+const Dashboard = ({ userId }) => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
@@ -70,21 +70,12 @@ const Dashboard = ({ userId, onLogout }) => {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>WaniKani Statistics</h1>
-          <div className="user-info">
-            <span className="username">{profile?.username}</span>
-            <span className="level">Level {profile?.level}</span>
-            <button onClick={() => navigate('/items')} className="browse-button">Browse Items</button>
-            <button onClick={() => navigate('/jlpt')} className="browse-button">JLPT Progress</button>
-            <button onClick={() => navigate('/study-lists')} className="browse-button">Study Lists</button>
-            <button onClick={onLogout} className="logout-button">Logout</button>
-          </div>
+      <div className="dashboard-content-wrapper">
+        <div className="profile-header">
+          <h1>{profile?.username}</h1>
+          <span className="level-badge">Level {profile?.level}</span>
         </div>
-      </header>
 
-      <main className="dashboard-main">
         <ProgressCards stats={stats} profile={profile} />
         
         <div className="status-and-accuracy-section">
@@ -160,7 +151,7 @@ const Dashboard = ({ userId, onLogout }) => {
         <button onClick={fetchData} className="refresh-button">
           Refresh Data
         </button>
-      </main>
+      </div>
     </div>
   );
 };

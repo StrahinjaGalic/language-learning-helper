@@ -1,93 +1,38 @@
 .dashboard-container {
-  min-height: 100vh;
+  height: 100%;
   background-color: #f5f5f5;
+  overflow-y: auto;
 }
 
-.dashboard-header {
-  background: linear-gradient(135deg, #f100a2 0%, #a100f1 100%);
-  color: white;
-  padding: 16px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.dashboard-content-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 30px;
 }
 
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-content h1 {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.user-info {
+.profile-header {
   display: flex;
   align-items: center;
   gap: 15px;
+  margin-bottom: 25px;
 }
 
-.username {
-  font-weight: 600;
-  font-size: 15px;
+.profile-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
 }
 
-.level {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 6px 14px;
+.level-badge {
+  background: linear-gradient(135deg, #ff00aa 0%, #a100f1 100%);
+  color: white;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.browse-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.browse-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: white;
-}
-
-.logout-button {
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  padding: 6px 16px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.logout-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-.dashboard-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px 20px;
 }
 
 .loading-spinner {
@@ -134,7 +79,7 @@
 .status-and-accuracy-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 35px;
   margin-bottom: 30px;
   align-items: stretch;
 }
@@ -183,8 +128,8 @@
 
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 30px;
   margin-bottom: 30px;
 }
 

@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { getItems, getAllKanji } from '../../services/api';
 import { JLPT_KANJI } from '../../data/jlptKanji';
 import './JLPTProgressPage.css';
+import './PageContainer.css';
 
-const JLPTProgressPage = ({ onLogout }) => {
+const JLPTProgressPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [allKanjiMap, setAllKanjiMap] = useState({});
@@ -87,23 +88,8 @@ const JLPTProgressPage = ({ onLogout }) => {
   }
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>JLPT Kanji Progress</h1>
-          <div className="header-actions">
-            <button onClick={() => navigate('/dashboard')} className="nav-button">
-              Dashboard
-            </button>
-            <button onClick={() => navigate('/items')} className="nav-button">
-              Browse Items
-            </button>
-            <button onClick={onLogout} className="logout-button">Logout</button>
-          </div>
-        </div>
-      </header>
-
-      <main className="jlpt-main">
+    <div className="page-container">
+      <div className="jlpt-main">
         {['N5', 'N4', 'N3', 'N2', 'N1'].map(level => {
           const stats = getLevelStats(level);
           const isExpanded = expandedLevels.includes(level);
@@ -191,7 +177,7 @@ const JLPTProgressPage = ({ onLogout }) => {
             </div>
           );
         })}
-      </main>
+      </div>
     </div>
   );
 };

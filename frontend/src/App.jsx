@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login/Login';
+import MainLayout from './components/Layout/MainLayout';
+import WKStatsLayout from './components/Layout/WKStatsLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import ItemBrowserPage from './components/Dashboard/ItemBrowserPage';
-import StudyListsPage from './components/Dashboard/StudyListsPage';
 import JLPTProgressPage from './components/Dashboard/JLPTProgressPage';
 import './App.css';
 
@@ -40,34 +41,35 @@ function App() {
         <Route 
           path="/login" 
           element={
-            userId ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />
+            userId ? <Navigate to="/wk-stats/dashboard" /> : <Login onLogin={handleLogin} />
           } 
         />
+        
+        {/* WK Stats routes with nested layout */}
         <Route 
-          path="/dashboard" 
+          path="/wk-stats/*" 
           element={
-            userId ? <Dashboard userId={userId} onLogout={handleLogout} /> : <Navigate to="/login" />
+            userId ? (
+              <MainLayout onLogout={handleLogout}>
+                <WKStatsLayout>
+                  <Routes>
+                    <Route path="/dashboard" element={<Dashboard userId={userId} />} />
+                    <Route path="/items" element={<ItemBrowserPage />} />
+                    <Route path="/jlpt" element={<JLPTProgressPage />} />
+                    <Route path="/" element={<Navigate to="/wk-stats/dashboard" />} />
+                  </Routes>
+                </WKStatsLayout>
+              </MainLayout>
+            ) : <Navigate to="/login" />
           } 
         />
-        <Route 
-          path="/items" 
-          element={
-            userId ? <ItemBrowserPage onLogout={handleLogout} /> : <Navigate to="/login" />
-          } 
-        />
-        <Route 
-          path="/study-lists" 
-          element={
-            userId ? <StudyListsPage onLogout={handleLogout} /> : <Navigate to="/login" />
-          } 
-        />
-        <Route 
-          path="/jlpt" 
-          element={
-            userId ? <JLPTProgressPage onLogout={handleLogout} /> : <Navigate to="/login" />
-          } 
-        />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+
+        {/* Legacy routes for backward compatibility */}
+        <Route path="/dashboard" element={<Navigate to="/wk-stats/dashboard" />} />
+        <Route path="/items" element={<Navigate to="/wk-stats/items" />} />
+        <Route path="/jlpt" element={<Navigate to="/wk-stats/jlpt" />} />
+        
+        <Route path="/" element={<Navigate to="/wk-stats/dashboard" />} />
       </Routes>
     </Router>
   );

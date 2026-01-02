@@ -491,4 +491,24 @@ router.get('/study-lists/:id/items', async (req, res) => {
   }
 });
 
+// GET /api/wk/all-kanji - Get all kanji subjects from WaniKani (for reference/tooltips)
+router.get('/all-kanji', async (req, res) => {
+  try {
+    const subjects = await getSubjects(req.wkToken, null);
+    const kanjiOnly = subjects
+      .filter(s => s.object === 'kanji')
+      .map(s => ({
+        character: s.data.characters,
+        meanings: s.data.meanings?.map(m => m.meaning) || [],
+        readings: s.data.readings?.map(r => r.reading) || [],
+        level: s.data.level
+      }));
+    
+    res.json(kanjiOnly);
+  } catch (error) {
+    console.error('All kanji fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch all kanji' });
+  }
+});
+
 export default router;

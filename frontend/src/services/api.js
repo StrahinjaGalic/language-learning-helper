@@ -95,4 +95,9 @@ export const getStudyListItems = async (id) => {
   return response.data;
 };
 
+export const getAllKanji = async () => {
+  const response = await api.get('/wk/all-kanji');
+  return response.data;
+};
+
 export default api;

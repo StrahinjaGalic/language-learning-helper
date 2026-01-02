@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getItems } from '../../services/api';
+import { getItems, getAllKanji } from '../../services/api';
 import { JLPT_KANJI } from '../../data/jlptKanji';
 import './JLPTProgressPage.css';
 
 const JLPTProgressPage = ({ onLogout }) => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  const [allKanjiMap, setAllKanjiMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedLevels, setExpandedLevels] = useState(['N5', 'N4']);
 
   useEffect(() => {
-    fetchItems();
+    fetchData();
   }, []);
 
-  const fetchItems = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getItems();
-      setItems(data.filter(item => item.type === 'kanji'));
+      // Fetch learned items
+      const itemsData = await getItems();
+      setItems(itemsData.filter(item => item.type === 'kanji'));
+      
+      // Fetch all WaniKani kanji data for tooltips
+      const allKanji = await getAllKanji();
+      const kanjiMap = {};
+      allKanji.forEach(k => {
+        kanjiMap[k.character] = k;
+      });
+      setAllKanjiMap(kanjiMap);
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
@@ -127,13 +137,52 @@ const JLPTProgressPage = ({ onLogout }) => {
                 <div className="kanji-grid">
                   {JLPT_KANJI[level].map(kanji => {
                     const status = getKanjiStatus(kanji);
+                    const item = items.find(i => i.characters === kanji);
+                    const kanjiData = allKanjiMap[kanji];
+                    
                     return (
                       <div
                         key={kanji}
                         className={`kanji-cell ${status.learned ? getSRSColor(status.srsStage) : 'locked'}`}
-                        title={status.learned ? `${kanji} - ${status.srsStageName} (Lv${status.level})` : `${kanji} - Not learned`}
                       >
                         {kanji}
+                        {status.learned && item ? (
+                          <div className="kanji-tooltip">
+                            <div className="tooltip-character">{kanji}</div>
+                            <div className="tooltip-meanings">
+                              {item.meanings.slice(0, 3).join(', ')}
+                            </div>
+                            {item.readings && item.readings.length > 0 && (
+                              <div className="tooltip-readings">
+                                {item.readings.slice(0, 3).join(', ')}
+                              </div>
+                            )}
+                            <div className="tooltip-meta">
+                              <span className="tooltip-srs">{status.srsStageName}</span>
+                              <span className="tooltip-level">WK Lv{status.level}</span>
+                            </div>
+                          </div>
+                        ) : kanjiData ? (
+                          <div className="kanji-tooltip">
+                            <div className="tooltip-character">{kanji}</div>
+                            <div className="tooltip-meanings">
+                              {kanjiData.meanings.slice(0, 3).join(', ')}
+                            </div>
+                            {kanjiData.readings && kanjiData.readings.length > 0 && (
+                              <div className="tooltip-readings">
+                                {kanjiData.readings.slice(0, 3).join(', ')}
+                              </div>
+                            )}
+                            <div className="tooltip-meta">
+                              <span className="tooltip-level">WK Lv{kanjiData.level}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="kanji-tooltip">
+                            <div className="tooltip-character">{kanji}</div>
+                            <div className="tooltip-locked">Not in WaniKani</div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

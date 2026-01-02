@@ -26,16 +26,20 @@ const Dashboard = ({ userId, onLogout }) => {
       setLoading(true);
       setError('');
       
-      const [profileData, statsData, forecastData, streaksData] = await Promise.all([
-        getProfile(),
-        getStats(),
-        getReviewForecast(),
-        getStreaks()
-      ]);
-
+      // Fetch sequentially to avoid rate limiting
+      const profileData = await getProfile();
       setProfile(profileData);
+      
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      const statsData = await getStats();
       setStats(statsData);
+      
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      const forecastData = await getReviewForecast();
       setForecast(forecastData);
+      
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      const streaksData = await getStreaks();
       setStreaks(streaksData);
     } catch (err) {
       console.error('Error fetching data:', err);

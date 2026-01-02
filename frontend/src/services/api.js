@@ -100,4 +100,35 @@ export const getAllKanji = async () => {
   return response.data;
 };
 
+// Grammar endpoints
+export const getGrammarPoints = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.jlptLevel) params.append('jlptLevel', filters.jlptLevel);
+  if (filters.category) params.append('category', filters.category);
+  if (filters.search) params.append('search', filters.search);
+  
+  const response = await api.get(`/grammar?${params.toString()}`);
+  return response.data;
+};
+
+export const getGrammarPoint = async (grammarId) => {
+  const response = await api.get(`/grammar/${grammarId}`);
+  return response.data;
+};
+
+export const getGrammarStats = async () => {
+  const response = await api.get('/grammar/stats/overview');
+  return response.data;
+};
+
+export const updateGrammarProgress = async (grammarId, data) => {
+  const response = await api.put(`/grammar/progress/${grammarId}`, data);
+  return response.data;
+};
+
+export const getUserGrammarProgress = async () => {
+  const response = await api.get('/grammar/progress/all');
+  return response.data;
+};
+
 export default api;

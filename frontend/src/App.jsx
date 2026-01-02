@@ -3,9 +3,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login/Login';
 import MainLayout from './components/Layout/MainLayout';
 import WKStatsLayout from './components/Layout/WKStatsLayout';
+import GrammarLayout from './components/Layout/GrammarLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import ItemBrowserPage from './components/Dashboard/ItemBrowserPage';
 import JLPTProgressPage from './components/Dashboard/JLPTProgressPage';
+import GrammarDashboard from './components/Grammar/GrammarDashboard';
+import GrammarBrowser from './components/Grammar/GrammarBrowser';
+import GrammarDetail from './components/Grammar/GrammarDetail';
+import GrammarProgress from './components/Grammar/GrammarProgress';
 import './App.css';
 
 function App() {
@@ -59,6 +64,26 @@ function App() {
                     <Route path="/" element={<Navigate to="/wk-stats/dashboard" />} />
                   </Routes>
                 </WKStatsLayout>
+              </MainLayout>
+            ) : <Navigate to="/login" />
+          } 
+        />
+
+        {/* Grammar routes with nested layout */}
+        <Route 
+          path="/grammar/*" 
+          element={
+            userId ? (
+              <MainLayout onLogout={handleLogout}>
+                <GrammarLayout>
+                  <Routes>
+                    <Route path="/dashboard" element={<GrammarDashboard />} />
+                    <Route path="/browse" element={<GrammarBrowser />} />
+                    <Route path="/progress" element={<GrammarProgress />} />
+                    <Route path="/point/:grammarId" element={<GrammarDetail />} />
+                    <Route path="/" element={<Navigate to="/grammar/browse" />} />
+                  </Routes>
+                </GrammarLayout>
               </MainLayout>
             ) : <Navigate to="/login" />
           } 

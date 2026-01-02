@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import wanikaniRoutes from './routes/wanikani.js';
+import grammarRoutes from './routes/grammar.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/wk', wanikaniRoutes);
+app.use('/api/grammar', grammarRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

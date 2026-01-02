@@ -4,26 +4,100 @@ const WANIKANI_BASE_URL = 'https://api.wanikani.com/v2';
 
 // Rate limiting: WaniKani allows 60 requests/minute
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL = 1000; // 1 second between requests
+
+// Queue-based rate limiter to handle concurrent requests properly
+class RateLimiter {
+  constructor(requestsPerMinute = 60) {
+    this.queue = [];
+    this.processing = false;
+    this.requestsPerMinute = requestsPerMinute;
+    this.minInterval = (60 * 1000) / requestsPerMinute; // milliseconds between requests
+    this.lastRequestTime = 0;
+  }
+
+  async enqueue(requestFn) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ requestFn, resolve, reject });
+      this.processQueue();
+    });
+  }
+
+  async processQueue() {
+    if (this.processing || this.queue.length === 0) return;
+    
+    this.processing = true;
+    
+    while (this.queue.length > 0) {
+      const { requestFn, resolve, reject } = this.queue.shift();
+      
+      // Wait for rate limit interval
+      const now = Date.now();
+      const timeSinceLastRequest = now - this.lastRequestTime;
+      if (timeSinceLastRequest < this.minInterval) {
+        await delay(this.minInterval - timeSinceLastRequest);
+      }
+      
+      try {
+        this.lastRequestTime = Date.now();
+        const result = await requestFn();
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+    }
+    
+    this.processing = false;
+  }
+}
+
+const rateLimiter = new RateLimiter(55); // Slightly under 60 to be safe
 
 const rateLimitedRequest = async (url, token) => {
-  const now = Date.now();
-  const timeSinceLastRequest = now - lastRequestTime;
-  
-  if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
-    await delay(MIN_REQUEST_INTERVAL - timeSinceLastRequest);
-  }
-  
-  lastRequestTime = Date.now();
-  
-  return axios.get(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Wanikani-Revision': '20170710'
-    }
+  return rateLimiter.enqueue(async () => {
+    return axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Wanikani-Revision': '20170710'
+      }
+    });
   });
 };
+
+// Simple in-memory cache with TTL
+class SimpleCache {
+  constructor(ttlMinutes = 5) {
+    this.cache = new Map();
+    this.ttl = ttlMinutes * 60 * 1000; // convert to milliseconds
+  }
+
+  set(key, value) {
+    this.cache.set(key, {
+      value,
+      timestamp: Date.now()
+    });
+  }
+
+  get(key) {
+    const cached = this.cache.get(key);
+    if (!cached) return null;
+    
+    const age = Date.now() - cached.timestamp;
+    if (age > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return cached.value;
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+}
+
+const assignmentsCache = new SimpleCache(5); // 5 minute cache
+const reviewStatsCache = new SimpleCache(5);
+const subjectsCache = new SimpleCache(30); // 30 minute cache for subjects
 
 export const validateToken = async (token) => {
   try {
@@ -61,6 +135,14 @@ export const getSummary = async (token) => {
 };
 
 export const getAssignments = async (token) => {
+  // Check cache first
+  const cacheKey = `assignments_${token.substring(0, 10)}`;
+  const cached = assignmentsCache.get(cacheKey);
+  if (cached) {
+    console.log('Returning cached assignments');
+    return cached;
+  }
+
   try {
     let allAssignments = [];
     let nextUrl = `${WANIKANI_BASE_URL}/assignments`;
@@ -77,6 +159,10 @@ export const getAssignments = async (token) => {
     }
     
     console.log(`Total assignments fetched: ${allAssignments.length}`);
+    
+    // Cache the result
+    assignmentsCache.set(cacheKey, allAssignments);
+    
     return allAssignments;
   } catch (error) {
     console.error('Error fetching assignments:', error.message);
@@ -85,6 +171,14 @@ export const getAssignments = async (token) => {
 };
 
 export const getReviewStatistics = async (token) => {
+  // Check cache first
+  const cacheKey = `reviewStats_${token.substring(0, 10)}`;
+  const cached = reviewStatsCache.get(cacheKey);
+  if (cached) {
+    console.log('Returning cached review statistics');
+    return cached;
+  }
+
   try {
     let allStats = [];
     let nextUrl = `${WANIKANI_BASE_URL}/review_statistics`;
@@ -101,6 +195,10 @@ export const getReviewStatistics = async (token) => {
     }
     
     console.log(`Total review statistics fetched: ${allStats.length}`);
+    
+    // Cache the result
+    reviewStatsCache.set(cacheKey, allStats);
+    
     return allStats;
   } catch (error) {
     console.error('Error fetching review statistics:', error.message);
@@ -143,20 +241,49 @@ export const getSubjects = async (token, subjectIds = null) => {
     let url = `${WANIKANI_BASE_URL}/subjects`;
     
     if (subjectIds && subjectIds.length > 0) {
-      // Fetch specific subjects by ID (max 1000 per request)
+      // Check cache for specific subjects
+      const uncachedIds = [];
+      const cachedSubjects = [];
+      
+      subjectIds.forEach(id => {
+        const cached = subjectsCache.get(`subject_${id}`);
+        if (cached) {
+          cachedSubjects.push(cached);
+        } else {
+          uncachedIds.push(id);
+        }
+      });
+      
+      if (cachedSubjects.length > 0) {
+        console.log(`Found ${cachedSubjects.length} subjects in cache`);
+        allSubjects = allSubjects.concat(cachedSubjects);
+      }
+      
+      if (uncachedIds.length === 0) {
+        return allSubjects; // All were cached
+      }
+      
+      // Fetch uncached subjects by ID (max 1000 per request)
       const chunks = [];
-      for (let i = 0; i < subjectIds.length; i += 1000) {
-        chunks.push(subjectIds.slice(i, i + 1000));
+      for (let i = 0; i < uncachedIds.length; i += 1000) {
+        chunks.push(uncachedIds.slice(i, i + 1000));
       }
       
       for (const chunk of chunks) {
         const idsParam = chunk.join(',');
         const response = await rateLimitedRequest(`${url}?ids=${idsParam}`, token);
-        allSubjects = allSubjects.concat(response.data.data);
+        const newSubjects = response.data.data;
+        
+        // Cache each subject individually
+        newSubjects.forEach(subject => {
+          subjectsCache.set(`subject_${subject.id}`, subject);
+        });
+        
+        allSubjects = allSubjects.concat(newSubjects);
         console.log(`Fetched ${allSubjects.length} subjects so far...`);
       }
     } else {
-      // Fetch all subjects (paginated)
+      // Fetch all subjects (paginated) - rare case, don't cache
       let nextUrl = url;
       
       while (nextUrl) {

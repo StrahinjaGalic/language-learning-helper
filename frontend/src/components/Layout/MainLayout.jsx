@@ -12,7 +12,7 @@ const MainLayout = ({ onLogout, children }) => {
     if (tab === 'wk-stats') {
       navigate('/wk-stats/dashboard');
     } else if (tab === 'grammar') {
-      navigate('/grammar');
+      navigate('/grammar/browse');
     }
   };
 
@@ -21,6 +21,8 @@ const MainLayout = ({ onLogout, children }) => {
                           location.pathname === '/items' ||
                           location.pathname === '/study-lists' ||
                           location.pathname === '/jlpt';
+
+  const isGrammarActive = location.pathname.startsWith('/grammar');
 
   return (
     <div className="main-layout">
@@ -31,6 +33,12 @@ const MainLayout = ({ onLogout, children }) => {
             onClick={() => handleTabChange('wk-stats')}
           >
             WK Stats
+          </button>
+          <button
+            className={`nav-tab ${isGrammarActive ? 'active' : ''}`}
+            onClick={() => handleTabChange('grammar')}
+          >
+            Grammar
           </button>
         </div>
         <button onClick={onLogout} className="logout-button">Logout</button>

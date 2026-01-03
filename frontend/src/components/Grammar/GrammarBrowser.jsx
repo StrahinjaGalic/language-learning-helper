@@ -175,7 +175,16 @@ const GrammarBrowser = () => {
 
       {viewMode === 'sections' ? (
         <div className="grammar-sections">
-          {Object.entries(groupedBySection).sort(([a], [b]) => a.localeCompare(b)).map(([section, points]) => (
+          {Object.entries(groupedBySection).sort(([a], [b]) => {
+            // Natural sort for section numbers (e.g., 3.1, 3.2, 3.10, 3.11)
+            const parseSection = (str) => {
+              const match = str.match(/^(\d+)\.(\d+)/);
+              return match ? [parseInt(match[1]), parseInt(match[2])] : [Infinity, Infinity];
+            };
+            const [aMajor, aMinor] = parseSection(a);
+            const [bMajor, bMinor] = parseSection(b);
+            return aMajor !== bMajor ? aMajor - bMajor : aMinor - bMinor;
+          }).map(([section, points]) => (
             <div key={section} className="grammar-section">
               <h2 className="section-title">{section}</h2>
               <div className="grammar-grid">

@@ -11,6 +11,8 @@ import GrammarDashboard from './components/Grammar/GrammarDashboard';
 import GrammarBrowser from './components/Grammar/GrammarBrowser';
 import GrammarDetail from './components/Grammar/GrammarDetail';
 import GrammarProgress from './components/Grammar/GrammarProgress';
+import ReadingLayout from './components/Layout/ReadingLayout';
+import ReadingResources, { ReadingSidebar } from './components/Reading/ReadingResources';
 import './App.css';
 
 function App() {
@@ -84,6 +86,21 @@ function App() {
                     <Route path="/" element={<Navigate to="/grammar/browse" />} />
                   </Routes>
                 </GrammarLayout>
+              </MainLayout>
+            ) : <Navigate to="/login" />
+          } 
+        />
+
+        {/* Reading routes with nested layout */}
+        <Route 
+          path="/reading/*" 
+          element={
+            userId ? (
+              <MainLayout onLogout={handleLogout}>
+                <ReadingLayout>
+                  <ReadingSidebar />
+                  <ReadingResources />
+                </ReadingLayout>
               </MainLayout>
             ) : <Navigate to="/login" />
           } 

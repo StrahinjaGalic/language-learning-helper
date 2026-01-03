@@ -18,6 +18,8 @@ const grammarPointSchema = new mongoose.Schema({
   titleJapanese: { type: String, required: true },
   jlptLevel: { type: String, required: true, enum: ['N5', 'N4', 'N3', 'N2', 'N1'] },
   category: { type: String, required: true },
+  taeKimSection: { type: String }, // e.g., "Basic Grammar - State of Being"
+  taeKimOrder: { type: Number }, // Order in Tae Kim's guide
   explanation: { type: String, required: true },
   structure: { type: String, required: true },
   examples: [exampleSchema],

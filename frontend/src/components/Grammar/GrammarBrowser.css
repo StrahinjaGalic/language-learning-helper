@@ -213,3 +213,30 @@
 .no-results p {
   font-size: 16px;
 }
+
+/* Section view styles */
+.grammar-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.grammar-section {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ff00aa;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ff00aa;
+}
+
+.grammar-section .grammar-grid {
+  margin-top: 20px;
+}
